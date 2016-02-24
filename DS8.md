@@ -336,7 +336,7 @@ Table: Table 1: Prediction results from our different models
 
          problem_id  modTree0   modTree1   modRf0   modRf1   modRf2   modRf3   modRf4 
 ------  -----------  ---------  ---------  -------  -------  -------  -------  -------
-38981             1  E          A          B        B        B        B        B      
+38981             1  E          C          B        B        B        B        B      
 11396             2  E          B          B        B        B        B        B      
 11500             3  E          B          B        B        B        B        B      
 20108             4  E          C          B        B        B        B        B      
@@ -369,7 +369,7 @@ kable(comparisons,captions="Table 2: Two basic properties of our different model
 Accuracy trainds (%)            66.17      59.26   100.00   100.00   100.00   100.00   100.00
 Accuracy testds (%)             66.16      58.37    99.92    99.61    99.65    99.97    99.67
 Accuracy complementds (%)       14.21      59.29    99.82    99.65    99.54    99.59    99.55
-Computation Time (secs)         21.00      36.00    63.00    98.00   100.00   101.00    97.00
+Computation Time (secs)         21.00      36.00    62.00    91.00    90.00    91.00    91.00
 Proportion Correct (-)           0.20       0.45     1.00     1.00     1.00     1.00     1.00
 
 From table two we can conclude that the randomForest models are much better than the tree models. Within the randomForest models we notice that the effect of cleaning out unnecessary variables is les dramatic than for the tree models. Finally we can conclude that the differences between the randomForest models are non-significant. However: the computation time for modRf0 (the simplest one) is smallest. we will retain this model as our final model and use it to produce the answers to the quiz. 

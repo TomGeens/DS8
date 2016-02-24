@@ -5,6 +5,7 @@ output:
   html_document: 
     keep_md: yes
     number_sections: yes
+    toc: yes
 ---
 #Introduction and datasets
 The original source files for this project can be found at the [Groupware@LES' Human Activity Recognition webpage](http://groupware.les.inf.puc-rio.br/har) and the original publication on the [WLE dataset](http://groupware.les.inf.puc-rio.br/static/WLE/WearableComputing_weight_lifting_exercises_biceps_curl_variations.csv) can be downloaded [here](http://groupware.les.inf.puc-rio.br/public/papers/2013.Velloso.QAR-WLE.pdf).
@@ -69,13 +70,13 @@ ans<-idans[order(idans[,1]),2]
 ```
 
 #Manual pre-processing
-For the pre-processing we'll consider two important points:  
+For the pre-processing we'll consider three important points:  
 
-* which near zero variables can be excluded?  
-* which remaining variables require further cleanup according to exploratory data analysis?  
-* which remaining variables might need to be excluded according to exploratory data analysis?  
+1. which near zero variance variables can be excluded?  
+2. which remaining variables require further cleanup according to exploratory data analysis?  
+3. which remaining variables might need to be excluded according to exploratory data analysis?  
 
-##Near zero variables to be excluded
+##Near zero variance variables to be excluded
 Let's find which variables for the "training", "testing", "complement" and "complete" datasets have near zero variance. Those variables do not contain relevant information to build our models. They can be excluded from further analysis.
 
 ```{r Find near zero variance variables, message=FALSE, warning=FALSE}
@@ -152,7 +153,7 @@ par(par.default)
 
 ##Other variables which might need to be excluded
 The last variable [,59] is the outcome variable and should in any case be left out as a predictor for calibration of the models. 
-If we look at the first plot again, wenotice that the first variable [,1] is just an index (1:19622) which should not have any explanatory value. The same is true for the variables [,c(3,4,6] which are time-indicators and not indicators of the quality of the exercise. We'll fit our models once with and once without these variables to assess the impact on our modelling strategy.
+If we look at the first plot again, wenotice that the first variable [,1] is just an index (1:19622) which should not have any explanatory value. The same is true for the variables [,c(3,4,6)] which are time-indicators and not indicators of the quality of the exercise. We'll fit our models once with and once without these variables to assess the impact on our modelling strategy.
 
 #Modelling
 ##Strategy
@@ -211,7 +212,7 @@ modTree0.pred.complement<-predict(modTree0,complement)
 modTree0.pred.testing<-predict(modTree0,testing)
 ```
 
-Our modTree0 model takes <0.01 seconds to build and has an accuracy of 66.17% on the trainds and 66,16% on the testds that drops out of sample (complement dataset) to 14.21% (worse than guessing randomly, wich should lead to a 20.00% accuracy...)
+Our modTree0 model takes some twenty seconds to build and has an accuracy of 66.17% on the trainds and 66,16% on the testds that drops out of sample (in the complement dataset) to 14.21% (worse than guessing randomly, wich should lead to a 20.00% accuracy...)
 
 ###Tree model without record id and time indicator variables: modTree1
 ```{r Tree model 1, message=FALSE, warning=FALSE, results="hide"}
@@ -230,7 +231,7 @@ modTree1.pred.complement<-predict(modTree1,complement)
 modTree1.pred.testing<-predict(modTree1,testing)
 ```
 
-Our modTree1 model has an accuracy of 59.26% on the trainds and 58,37% on the testds. Out of sample (complement dataset) it remains at 59.29%. This proves that excluding the record id and time-indicator variables is very important: they did not affect the results of the predictions for testds, the 25% subset of the coursera training dataset, but they did disturb the analysis of another portion of the original source dataset!
+Our modTree1 model has an accuracy of 59.26% on the trainds and 58,37% on the testds. Out of sample (complement dataset) it remains at 59.29%. This proves that excluding the record id and time-indicator variables is very important in the CART approach: they did not affect the results of the predictions for testds, the 25% subset of the coursera training dataset, but they did disturb the analysis of another portion of the original source dataset!
 
 ```{r PCA trial 2, eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 #modTreePCA
@@ -276,7 +277,7 @@ table(modTreePCA2.pred.testing,modTreePCA2.pred.answer)
 ```
 
 ###Random forest model with record id and time indicator variables: modRf0
-The first random forest models we ran, we used the default settings of the train function. We repeated them afterwards with the defaultsettings of the randomForest function. With train, a calculation took >1h, with randomForest the same calculation took only 5 min. Whenever you can: use randomForest! We included the argument do.trace=TRUE, in order to see the progress of the modelling (the console prints the progress for processing the default number of 500 trees).
+The first random forest models we ran, we used the default settings of the train function. We repeated them afterwards with the defaultsettings of the randomForest function. With train, a calculation took >1h, with randomForest the same calculation took less than 5 min. Whenever you can: use randomForest outside the train function! We included the argument do.trace=TRUE, in order to see the progress of the modelling (the console prints the progress while processing the default number of 500 trees).
 
 ```{r Random forest model 0, message=FALSE, warning=FALSE, results="hide"}
 #modRf
@@ -294,7 +295,7 @@ modRf0.pred.testds<-predict(modRf0,testds)
 modRf0.pred.complement<-predict(modRf0,complement,na.action=na.pass)
 ```
 
-Our modRf0 model has an accuracy of 100.00% on the trainds and 99,92% on the testds, and out of sample (complement dataset) 99.82%. In contrast to the tree model, the effect of keeping the record id and time-indicator variables in the modelling function is less dramatic.
+Our modRf0 model has an accuracy of 100.00% on the trainds and 99,92% on the testds, and out of sample (complement dataset) 99.82%. In contrast to the tree model modTree0, the effect of keeping the record id and time-indicator variables in the modelling function is less dramatic.
 
 ###Random forest model without record id and time indicator variables: modRf1
 ```{r Random forest model 1, message=FALSE, warning=FALSE, results="hide"}
@@ -314,11 +315,15 @@ modRf1.pred.complement<-predict(modRf1,complement,na.action=na.pass)
 Our modRf1 model has an accuracy of 100.00% on the trainds and 99,73% on the testds, and out of sample (complement dataset) 99.69%. In contrast to the tree model, the effect of excluding the record id and time-indicator variables in the modelling function does not improve the model.
 
 ###Random forest model without record id and time indicator variables and non-default values for the trainControl argument: modRf2, modRf3 and modRf4
-In this last part we'll run the same random forest models as modRf1, except that we'll use different trainControl settings:  
+In the last part of our modelling strategy we ran the same random forest models as modRf1, except that we used different trainControl settings:  
 
 * modRf2 uses "cv"  
 * modRf3 uses "repatedcv"  
 * modRf4 uses "LOOCV"  
+
+The results of this and all previous modelling steps are shown in the tables 1 and 2.
+
+##Conclusions
 
 ```{r Random forest models 2, message=FALSE, warning=FALSE, include=FALSE}
 start.time<-Sys.time()
@@ -418,7 +423,7 @@ library(knitr)
 kable(predictions,caption="Table 1: Prediction results from our different models")
 ```
 
-In table 2, a basic summary of our models is shown: the accuracies for the trainds and testds (75% and 25% of the coursera "training" dataset as well as for the "complement" dataset (a validation dataset to test our out of sample accuracy), the computation time needed to build the models, and finally the proportion of correct values for the coursera quiz "testing", assuming that our near 100% accuracy random forest models will not make prediction errors for these 20 questions.
+In table 2, a basic summary of our models is shown: the accuracies for the trainds and testds (75% and 25% of the coursera "training" dataset) as well as for the "complement" dataset (a validation dataset to test our out of sample accuracy), the computation time needed to build the models, and finally the proportion of correct values for the coursera quiz "testing", assuming that our near 100% accuracy random forest models will not make prediction errors for these 20 questions.
 
 ```{r Summary part 3, message=FALSE, warning=FALSE}
 kable(comparisons,captions="Table 2: Two basic properties of our different models")
