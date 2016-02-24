@@ -271,6 +271,7 @@ Our modTree1 model has an accuracy of 59.26% on the trainds and 58,37% on the te
 
 
 
+## Random forest models (Rf)
 ###Random forest model with record id and time indicator variables: modRf0
 The first random forest models we ran, we used the default settings of the train function. We repeated them afterwards with the defaultsettings of the randomForest function. With train, a calculation took >1h, with randomForest the same calculation took less than 5 min. Whenever you can: use randomForest outside the train function! We included the argument do.trace=TRUE, in order to see the progress of the modelling (the console prints the progress while processing the default number of 500 trees).
 
@@ -331,320 +332,49 @@ In table 1, the solution to the quiz is shown as predicted with the different mo
 
 ```r
 library(knitr)
-kable(predictions,caption="Table 1: Prediction results from our different models",format="html")
+kable(predictions,caption="Table 1: Prediction results from our different models")
 ```
 
-<table>
-<caption>Table 1: Prediction results from our different models</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> problem_id </th>
-   <th style="text-align:left;"> modTree0 </th>
-   <th style="text-align:left;"> modTree1 </th>
-   <th style="text-align:left;"> modRf0 </th>
-   <th style="text-align:left;"> modRf1 </th>
-   <th style="text-align:left;"> modRf2 </th>
-   <th style="text-align:left;"> modRf3 </th>
-   <th style="text-align:left;"> modRf4 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> 38981 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 11396 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 11500 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 20108 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 2115 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 18643 </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 16380 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 13548 </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 21141 </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> C </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 20143 </td>
-   <td style="text-align:right;"> 10 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 22281 </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:left;"> D </td>
-   <td style="text-align:left;"> D </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 14564 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3257 </td>
-   <td style="text-align:right;"> 13 </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 10492 </td>
-   <td style="text-align:right;"> 14 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 19793 </td>
-   <td style="text-align:right;"> 15 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 8550 </td>
-   <td style="text-align:right;"> 16 </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 30143 </td>
-   <td style="text-align:right;"> 17 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 23150 </td>
-   <td style="text-align:right;"> 18 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 35271 </td>
-   <td style="text-align:right;"> 19 </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> C </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-   <td style="text-align:left;"> E </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> 3173 </td>
-   <td style="text-align:right;"> 20 </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-   <td style="text-align:left;"> B </td>
-  </tr>
-</tbody>
-</table>
+
+
+Table: Table 1: Prediction results from our different models
+
+         problem_id  modTree0   modTree1   modRf0   modRf1   modRf2   modRf3   modRf4 
+------  -----------  ---------  ---------  -------  -------  -------  -------  -------
+3257              1  A          A          B        B        B        B        B      
+19793             2  E          A          A        A        A        A        A      
+20108             3  E          C          B        B        B        B        B      
+8550              4  B          A          A        A        A        A        A      
+10492             5  E          A          A        A        A        A        A      
+23150             6  E          C          E        E        E        E        E      
+22281             7  E          C          D        D        D        D        D      
+20143             8  E          C          B        B        B        B        B      
+14564             9  E          A          A        A        A        A        A      
+30143            10  E          A          A        A        A        A        A      
+38981            11  E          C          B        B        B        B        B      
+21141            12  E          C          C        C        C        C        C      
+11500            13  E          B          B        B        B        B        B      
+18643            14  E          A          A        A        A        A        A      
+35271            15  E          C          E        E        E        E        E      
+13548            16  E          B          E        E        E        E        E      
+2115             17  A          B          A        A        A        A        A      
+16380            18  E          A          B        B        B        B        B      
+3173             19  A          A          B        B        B        B        B      
+11396            20  E          B          B        B        B        B        B      
 
 In table 2, a basic summary of our models is shown: the accuracies for the trainds and testds (75% and 25% of the coursera "training" dataset) as well as for the "complement" dataset (a validation dataset to test our out of sample accuracy), the computation time needed to build the models, and finally the proportion of correct values for the coursera quiz "testing", assuming that our near 100% accuracy random forest models will not make prediction errors for these 20 questions.
 
 
 ```r
-kable(comparisons,captions="Table 2: Two basic properties of our different models",format="html")
+kable(comparisons,captions="Table 2: Two basic properties of our different models")
 ```
 
-<table>
- <thead>
-  <tr>
-   <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> modTree0 </th>
-   <th style="text-align:right;"> modTree1 </th>
-   <th style="text-align:right;"> modRf0 </th>
-   <th style="text-align:right;"> modRf1 </th>
-   <th style="text-align:right;"> modRf2 </th>
-   <th style="text-align:right;"> modRf3 </th>
-   <th style="text-align:right;"> modRf4 </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> Accuracy trainds (%) </td>
-   <td style="text-align:right;"> 66.17 </td>
-   <td style="text-align:right;"> 59.26 </td>
-   <td style="text-align:right;"> 100.00 </td>
-   <td style="text-align:right;"> 100.00 </td>
-   <td style="text-align:right;"> 100.00 </td>
-   <td style="text-align:right;"> 100.00 </td>
-   <td style="text-align:right;"> 100.00 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Accuracy testds (%) </td>
-   <td style="text-align:right;"> 66.16 </td>
-   <td style="text-align:right;"> 58.37 </td>
-   <td style="text-align:right;"> 99.92 </td>
-   <td style="text-align:right;"> 99.61 </td>
-   <td style="text-align:right;"> 99.65 </td>
-   <td style="text-align:right;"> 99.97 </td>
-   <td style="text-align:right;"> 99.67 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Accuracy complementds (%) </td>
-   <td style="text-align:right;"> 14.21 </td>
-   <td style="text-align:right;"> 59.29 </td>
-   <td style="text-align:right;"> 99.82 </td>
-   <td style="text-align:right;"> 99.65 </td>
-   <td style="text-align:right;"> 99.54 </td>
-   <td style="text-align:right;"> 99.59 </td>
-   <td style="text-align:right;"> 99.55 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Computation Time (secs) </td>
-   <td style="text-align:right;"> 22.00 </td>
-   <td style="text-align:right;"> 37.00 </td>
-   <td style="text-align:right;"> 63.00 </td>
-   <td style="text-align:right;"> 94.00 </td>
-   <td style="text-align:right;"> 93.00 </td>
-   <td style="text-align:right;"> 93.00 </td>
-   <td style="text-align:right;"> 92.00 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Proportion Correct (-) </td>
-   <td style="text-align:right;"> 0.20 </td>
-   <td style="text-align:right;"> 0.25 </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 1.00 </td>
-   <td style="text-align:right;"> 1.00 </td>
-  </tr>
-</tbody>
-</table>
+                             modTree0   modTree1   modRf0   modRf1   modRf2   modRf3   modRf4
+--------------------------  ---------  ---------  -------  -------  -------  -------  -------
+Accuracy trainds (%)            66.17      59.26   100.00   100.00   100.00   100.00   100.00
+Accuracy testds (%)             66.16      58.37    99.92    99.61    99.65    99.97    99.67
+Accuracy complementds (%)       14.21      59.29    99.82    99.65    99.54    99.59    99.55
+Computation Time (secs)         21.00      38.00    71.00   106.00    97.00    91.00    92.00
+Proportion Correct (-)           0.20       0.45     1.00     1.00     1.00     1.00     1.00
 
 From table two we can conclude that the randomForest models are much better than the tree models. Within the randomForest models we notice that the effect of cleaning out unnecessary variables is les dramatic than for the tree models. Finally we can conclude that the differences between the randomForest models are non-significant. However: the computation time for modRf0 (the simplest one) is smallest. we will retain this model as our final model and use it to produce the answers to the quiz. 
