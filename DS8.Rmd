@@ -321,9 +321,9 @@ In the last part of our modelling strategy we ran the same random forest models 
 * modRf3 uses "repatedcv"  
 * modRf4 uses "LOOCV"  
 
-The results of this and all previous modelling steps are shown in the tables 1 and 2.
+The results of this and all previous modelling steps are shown in the tables 1 and 2 in the conclusions section.
 
-##Conclusions
+#Conclusions
 
 ```{r Random forest models 2, message=FALSE, warning=FALSE, include=FALSE}
 start.time<-Sys.time()
@@ -401,7 +401,7 @@ table(modRf4.pred.testb,modRf4.pred.answer)
 
 predictions<-data.frame(idans[,1],modTree0.pred.testb,modTree1.pred.testb,modRf0.pred.testb,modRf1.pred.testb,modRf2.pred.testb,modRf3.pred.testb,modRf4.pred.testb)
 predictions<-predictions[order(predictions[,1]),]
-names(predictions)<-c("problem_id","modTree0","modTree1","modRf0","modRf1","modRf2","modRf3","modRf4")
+colnames(predictions)<-c("problem_id","modTree0","modTree1","modRf0","modRf1","modRf2","modRf3","modRf4")
 
 answer<-data.frame(1:20,predictions$modRf0);names(answer)<-c("problem_id","classe");
 
@@ -420,13 +420,13 @@ In table 1, the solution to the quiz is shown as predicted with the different mo
 
 ```{r Summary part 2, message=FALSE, warning=FALSE}
 library(knitr)
-kable(predictions,caption="Table 1: Prediction results from our different models")
+kable(predictions,caption="Table 1: Prediction results from our different models",format="html")
 ```
 
 In table 2, a basic summary of our models is shown: the accuracies for the trainds and testds (75% and 25% of the coursera "training" dataset) as well as for the "complement" dataset (a validation dataset to test our out of sample accuracy), the computation time needed to build the models, and finally the proportion of correct values for the coursera quiz "testing", assuming that our near 100% accuracy random forest models will not make prediction errors for these 20 questions.
 
 ```{r Summary part 3, message=FALSE, warning=FALSE}
-kable(comparisons,captions="Table 2: Two basic properties of our different models")
+kable(comparisons,captions="Table 2: Two basic properties of our different models",format="html")
 ```
 
 From table two we can conclude that the randomForest models are much better than the tree models. Within the randomForest models we notice that the effect of cleaning out unnecessary variables is les dramatic than for the tree models. Finally we can conclude that the differences between the randomForest models are non-significant. However: the computation time for modRf0 (the simplest one) is smallest. we will retain this model as our final model and use it to produce the answers to the quiz. 
